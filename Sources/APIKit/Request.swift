@@ -7,10 +7,9 @@ import Result
 /// - `var baseURL: URL`
 /// - `var method: HTTPMethod`
 /// - `var path: String`
-/// - `func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response`
 public protocol Request {
     /// The response type associated with the request type.
-    associatedtype Response
+    associatedtype Response: APIKit.Response
 
     /// The base URL.
     var baseURL: URL { get }
@@ -47,18 +46,6 @@ public protocol Request {
     /// thrown in this method, the result of `Session.send()` turns `.failure(.requestError(error))`.
     /// - Throws: `ErrorType`
     func intercept(urlRequest: URLRequest) throws -> URLRequest
-
-    /// Intercepts response `Any` and `HTTPURLResponse`. If an error is thrown in this method,
-    /// the result of `Session.send()` turns `.failure(.responseError(error))`.
-    /// The default implementation of this method is provided to throw `RequestError.unacceptableStatusCode`
-    /// if the HTTP status code is not in `200..<300`.
-    /// - Throws: `ErrorType`
-    func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any
-
-    /// Build `Response` instance from raw response object. This method is called after
-    /// `intercept(object:urlResponse:)` if it does not throw any error.
-    /// - Throws: `ErrorType`
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response
 }
 
 public extension Request {
@@ -92,13 +79,6 @@ public extension Request {
 
     public func intercept(urlRequest: URLRequest) throws -> URLRequest {
         return urlRequest
-    }
-
-    public func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
-        guard 200..<300 ~= urlResponse.statusCode else {
-            throw ResponseError.unacceptableStatusCode(urlResponse.statusCode)
-        }
-        return object
     }
 
     /// Builds `URLRequest` from properties of `self`.
@@ -136,13 +116,5 @@ public extension Request {
         }
 
         return (try intercept(urlRequest: urlRequest) as URLRequest)
-    }
-
-    /// Builds `Response` from response `Data`.
-    /// - Throws: `ResponseError`, `ErrorType`
-    public func parse(data: Data, urlResponse: HTTPURLResponse) throws -> Response {
-        let parsedObject = try dataParser.parse(data: data)
-        let passedObject = try intercept(object: parsedObject, urlResponse: urlResponse)
-        return try response(from: passedObject, urlResponse: urlResponse)
     }
 }

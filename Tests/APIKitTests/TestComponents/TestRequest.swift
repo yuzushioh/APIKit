@@ -8,7 +8,15 @@ struct TestRequest: Request {
     }
 
     // MARK: Request
-    typealias Response = Any
+    struct Response: APIKit.JSONResponse {
+        let json: Any
+        let urlResponse: HTTPURLResponse
+        
+        init(json: Any, urlResponse: HTTPURLResponse) throws {
+            self.json = json
+            self.urlResponse = urlResponse
+        }
+    }
 
     init(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
         self.baseURL = URL(string: baseURL)!
@@ -28,9 +36,5 @@ struct TestRequest: Request {
 
     func intercept(urlRequest: URLRequest) throws -> URLRequest {
         return try interceptURLRequest(urlRequest)
-    }
-
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-        return object
     }
 }

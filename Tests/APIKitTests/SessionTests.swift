@@ -9,7 +9,7 @@ class SessionTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-
+        
         adapter = TestSessionAdapter()
         session = Session(adapter: adapter)
     }
@@ -23,8 +23,9 @@ class SessionTests: XCTestCase {
         
         session.send(request) { response in
             switch response {
-            case .success(let dictionary):
-                XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
+            case .success(let response):
+                let dictionary = response.json as? [String: String]
+                XCTAssertEqual(dictionary?["key"], "value")
 
             case .failure:
                 XCTFail()
@@ -52,27 +53,6 @@ class SessionTests: XCTestCase {
                 XCTFail()
             }
             
-            expectation.fulfill()
-        }
-        
-        waitForExpectations(timeout: 1.0, handler: nil)
-    }
-
-    func testUnacceptableStatusCodeError() {
-        adapter.urlResponse = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 400, httpVersion: nil, headerFields: nil)
-
-        let expectation = self.expectation(description: "wait for response")
-        let request = TestRequest()
-        
-        session.send(request) { result in
-            if case .failure(let error) = result,
-               case .responseError(let responseError as ResponseError) = error,
-               case .unacceptableStatusCode(let statusCode) = responseError {
-                XCTAssertEqual(statusCode, 400)
-            } else {
-                XCTFail()
-            }
-
             expectation.fulfill()
         }
         
@@ -146,6 +126,9 @@ class SessionTests: XCTestCase {
     }
 
     func testCancelFilter() {
+        let dictionary = ["key": "value"]
+        adapter.data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
+        
         let successExpectation = expectation(description: "wait for response")
         let successRequest = TestRequest(path: "/success")
 
@@ -169,6 +152,7 @@ class SessionTests: XCTestCase {
         }
         
         session.cancelRequests(with: TestRequest.self) { request in
+            print(request.path == failureRequest.path, request.path, failureRequest.path)
             return request.path == failureRequest.path
         }
         
@@ -176,7 +160,15 @@ class SessionTests: XCTestCase {
     }
 
     struct AnotherTestRequest: Request {
-        typealias Response = Void
+        struct Response: APIKit.Response {
+            let data: Data
+            let urlResponse: HTTPURLResponse
+            
+            init(data: Data, urlResponse: HTTPURLResponse) {
+                self.data = data
+                self.urlResponse = urlResponse
+            }
+        }
 
         var baseURL: URL {
             return URL(string: "https://example.com")!
@@ -188,10 +180,6 @@ class SessionTests: XCTestCase {
 
         var path: String {
             return "/"
-        }
-
-        func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-            return ()
         }
     }
 

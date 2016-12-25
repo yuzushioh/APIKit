@@ -4,7 +4,7 @@ import APIKit
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
-//: Step 1: Define request protocol
+//: Step 1: Define request protocol.
 protocol GitHubRequest: Request {
 
 }
@@ -15,18 +15,29 @@ extension GitHubRequest {
     }
 }
 
-//: Step 2: Create model object
-struct RateLimit {
+//: Step 2: Define response type conforms to response protocol.
+struct RateLimitResponse: JSONResponse {
+    struct DecodeError: Error {
+        let json: Any
+        let description: String
+    }
+    
     let count: Int
     let resetDate: Date
 
-    init?(dictionary: [String: AnyObject]) {
-        guard let count = dictionary["rate"]?["limit"] as? Int else {
-            return nil
+    init(json: Any, urlResponse: HTTPURLResponse) throws {
+        guard
+            let root = json as? [String: Any],
+            let rate = root["rate"] as? [String: Any] else {
+            throw DecodeError(json: json, description: "rate is not a dictionary")
+        }
+        
+        guard let count = rate["limit"] as? Int else {
+            throw DecodeError(json: json, description: "value for rate.limit is missing")
         }
 
-        guard let resetDateString = dictionary["rate"]?["reset"] as? TimeInterval else {
-            return nil
+        guard let resetDateString = rate["reset"] as? TimeInterval else {
+            throw DecodeError(json: json, description: "value for rate.reset is missing")
         }
 
         self.count = count
@@ -34,10 +45,10 @@ struct RateLimit {
     }
 }
 
-//: Step 3: Define request type conforming to created request protocol
+//: Step 3: Define request type conforms to request protocol for the API.
 // https://developer.github.com/v3/rate_limit/
 struct GetRateLimitRequest: GitHubRequest {
-    typealias Response = RateLimit
+    typealias Response = RateLimitResponse
 
     var method: HTTPMethod {
         return .get
@@ -46,18 +57,9 @@ struct GetRateLimitRequest: GitHubRequest {
     var path: String {
         return "/rate_limit"
     }
-
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-        guard let dictionary = object as? [String: AnyObject],
-              let rateLimit = RateLimit(dictionary: dictionary) else {
-            throw ResponseError.unexpectedObject(object)
-        }
-
-        return rateLimit
-    }
 }
 
-//: Step 4: Send request
+//: Step 4: Send request.
 let request = GetRateLimitRequest()
 
 Session.send(request) { result in
