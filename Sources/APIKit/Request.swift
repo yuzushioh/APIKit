@@ -109,7 +109,7 @@ public extension Request {
 
         urlRequest.url = components.url
         urlRequest.httpMethod = method.rawValue
-        urlRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
+        urlRequest.setValue(Response.contentType, forHTTPHeaderField: "Accept")
 
         headerFields.forEach { key, value in
             urlRequest.setValue(value, forHTTPHeaderField: key)

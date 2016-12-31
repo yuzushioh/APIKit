@@ -10,6 +10,10 @@ public protocol JSONResponse: Response {
 }
 
 public extension JSONResponse {
+    static var contentType: String? {
+        return "application/json"
+    }
+    
     static var readingOptions: JSONSerialization.ReadingOptions {
         return []
     }
