@@ -7,7 +7,7 @@ public protocol FormURLEncodedResponse: Response {
     
     /// Returns instance from form-urlencoded body `[String: Any]`
     /// and header `HTTPURLResponse`.
-    init(form: [String: Any], urlResponse: HTTPURLResponse) throws
+    init(form: [String: String], urlResponse: HTTPURLResponse) throws
 }
 
 public extension FormURLEncodedResponse {
