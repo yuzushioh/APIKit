@@ -39,9 +39,6 @@ public protocol Request {
     /// in this property, the values in this property are preferred.
     var headerFields: [String: String] { get }
 
-    /// The parser object that states `Content-Type` to accept and parses response body.
-    var dataParser: DataParser { get }
-
     /// Intercepts `URLRequest` which is created by `Request.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.send()` turns `.failure(.requestError(error))`.
     /// - Throws: `ErrorType`
@@ -71,10 +68,6 @@ public extension Request {
 
     public var headerFields: [String: String] {
         return [:]
-    }
-
-    public var dataParser: DataParser {
-        return JSONDataParser(readingOptions: [])
     }
 
     public func intercept(urlRequest: URLRequest) throws -> URLRequest {

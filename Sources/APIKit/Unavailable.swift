@@ -22,9 +22,6 @@ public typealias SessionTaskType = SessionTask
 @available(*, unavailable, renamed: "BodyParameters")
 public typealias BodyParametersType = BodyParameters
 
-@available(*, unavailable, renamed: "DataParser")
-public typealias DataParserType = DataParser
-
 // MARK: Session
 
 extension Session {
