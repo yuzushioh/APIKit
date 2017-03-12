@@ -5,9 +5,7 @@ import APIKit
 PlaygroundPage.current.needsIndefiniteExecution = true
 
 //: Step 1: Define request protocol
-protocol GitHubRequest: Request {
-
-}
+protocol GitHubRequest: Request {}
 
 extension GitHubRequest {
     var baseURL: URL {
@@ -15,18 +13,33 @@ extension GitHubRequest {
     }
 }
 
-//: Step 2: Create model object
-struct RateLimit {
+//: Step 2: Define response protocol
+protocol GitHubResponse: Response {}
+
+extension GitHubResponse {
+    static var parser: JSONDataParser {
+        return JSONDataParser(readingOptions: [])
+    }
+}
+
+//: Step 3: Create response model that conforms to the response protocol.
+struct RateLimit: GitHubResponse {
     let count: Int
     let resetDate: Date
 
-    init?(dictionary: [String: AnyObject]) {
-        guard let count = dictionary["rate"]?["limit"] as? Int else {
-            return nil
+    init(data: RateLimit.Parser.Parsed, urlResponse: HTTPURLResponse) throws {
+        guard
+            let rootDictionary = data as? [String: Any],
+            let rateDictionary = rootDictionary["rate"] as? [String: Any] else {
+            throw ResponseError.unexpectedObject(data)
         }
 
-        guard let resetDateString = dictionary["rate"]?["reset"] as? TimeInterval else {
-            return nil
+        guard let count = rateDictionary["limit"] as? Int else {
+            throw ResponseError.unexpectedObject(data)
+        }
+
+        guard let resetDateString = rateDictionary["reset"] as? TimeInterval else {
+            throw ResponseError.unexpectedObject(data)
         }
 
         self.count = count
@@ -45,15 +58,6 @@ struct GetRateLimitRequest: GitHubRequest {
 
     var path: String {
         return "/rate_limit"
-    }
-
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-        guard let dictionary = object as? [String: AnyObject],
-              let rateLimit = RateLimit(dictionary: dictionary) else {
-            throw ResponseError.unexpectedObject(object)
-        }
-
-        return rateLimit
     }
 }
 
