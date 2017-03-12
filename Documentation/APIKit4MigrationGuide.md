@@ -7,14 +7,14 @@
 
 ```swift
 public protocol Response {
-    associatedtype Parser: DataParser
+    associatedtype DataParser: APIKit.DataParser
 
-    static var parser: Parser { get }
+    static var dataParser: DataParser { get }
 
-    init(data: Parser.Parsed, urlResponse: HTTPURLResponse) throws
+    init(parsedData: DataParser.Parsed, urlResponse: HTTPURLResponse) throws
 
     static func intercept(data: Data, urlResponse: HTTPURLResponse) throws -> (Data, HTTPURLResponse)
-    static func intercept(parsed: Parser.Parsed, urlResponse: HTTPURLResponse) throws -> (Parser.Parsed, HTTPURLResponse)
+    static func intercept(parsedData: DataParser.Parsed, urlResponse: HTTPURLResponse) throws -> (DataParser.Parsed, HTTPURLResponse)
     static func intercept(instance: Self, urlResponse: HTTPURLResponse) throws -> (Self, HTTPURLResponse)
 }
 ```

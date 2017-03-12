@@ -3,13 +3,13 @@ import Foundation
 /// `Response` protocol represents response of Web API.
 public protocol Response {
     /// The data parser type that deserialize HTTP response body.
-    associatedtype Parser: DataParser
+    associatedtype DataParser: APIKit.DataParser
 
     /// Instatiates a parser.
-    static var parser: Parser { get }
+    static var dataParser: DataParser { get }
 
     /// Instantiates response from parsed data `Parser.Parsed` and `HTTPURLResponse`.
-    init(data: Parser.Parsed, urlResponse: HTTPURLResponse) throws
+    init(parsedData: DataParser.Parsed, urlResponse: HTTPURLResponse) throws
 
     // MARK: - Interceptors 
 
@@ -19,10 +19,10 @@ public protocol Response {
     /// if the HTTP status code is not in `200..<300`.
     static func intercept(data: Data, urlResponse: HTTPURLResponse) throws -> (Data, HTTPURLResponse)
     
-    /// Intercepts `Parser.Parsed` and `HTTPURLResponse`.
+    /// Intercepts `DataParser.Parsed` and `HTTPURLResponse`.
     /// If an error is thrown in this method, the result of `Session.send()` turns `.failure(.responseError(error))`.
     /// This method is called after `intercept(data:urlResponse:)`.
-    static func intercept(parsed: Parser.Parsed, urlResponse: HTTPURLResponse) throws -> (Parser.Parsed, HTTPURLResponse)
+    static func intercept(parsedData: DataParser.Parsed, urlResponse: HTTPURLResponse) throws -> (DataParser.Parsed, HTTPURLResponse)
     
     /// Intercepts `Self` and `HTTPURLResponse`.
     /// If an error is thrown in this method, the result of `Session.send()` turns `.failure(.responseError(error))`.
@@ -38,8 +38,8 @@ public extension Response {
         return (data, urlResponse)
     }
     
-    public static func intercept(parsed: Parser.Parsed, urlResponse: HTTPURLResponse) throws -> (Parser.Parsed, HTTPURLResponse) {
-        return (parsed, urlResponse)
+    public static func intercept(parsedData: DataParser.Parsed, urlResponse: HTTPURLResponse) throws -> (DataParser.Parsed, HTTPURLResponse) {
+        return (parsedData, urlResponse)
     }
     
     public static func intercept(instance: Self, urlResponse: HTTPURLResponse) throws -> (Self, HTTPURLResponse) {

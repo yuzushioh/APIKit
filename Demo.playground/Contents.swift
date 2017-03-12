@@ -17,7 +17,7 @@ extension GitHubRequest {
 protocol GitHubResponse: Response {}
 
 extension GitHubResponse {
-    static var parser: JSONDataParser {
+    static var dataParser: JSONDataParser {
         return JSONDataParser(readingOptions: [])
     }
 }
@@ -27,19 +27,19 @@ struct RateLimit: GitHubResponse {
     let count: Int
     let resetDate: Date
 
-    init(data: RateLimit.Parser.Parsed, urlResponse: HTTPURLResponse) throws {
+    init(parsedData: RateLimit.DataParser.Parsed, urlResponse: HTTPURLResponse) throws {
         guard
-            let rootDictionary = data as? [String: Any],
+            let rootDictionary = parsedData as? [String: Any],
             let rateDictionary = rootDictionary["rate"] as? [String: Any] else {
-            throw ResponseError.unexpectedObject(data)
+            throw ResponseError.unexpectedObject(parsedData)
         }
 
         guard let count = rateDictionary["limit"] as? Int else {
-            throw ResponseError.unexpectedObject(data)
+            throw ResponseError.unexpectedObject(parsedData)
         }
 
         guard let resetDateString = rateDictionary["reset"] as? TimeInterval else {
-            throw ResponseError.unexpectedObject(data)
+            throw ResponseError.unexpectedObject(parsedData)
         }
 
         self.count = count

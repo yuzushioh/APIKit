@@ -78,10 +78,10 @@ open class Session {
             case (let data?, let urlResponse as HTTPURLResponse, _):
                 do {
                     var (data, urlResponse) = try Request.Response.intercept(data: data, urlResponse: urlResponse)
-                    var parsed = try Request.Response.parser.parse(data: data)
-                    (parsed, urlResponse) = try Request.Response.intercept(parsed: parsed, urlResponse: urlResponse)
+                    var parsedData = try Request.Response.dataParser.parse(data: data)
+                    (parsedData, urlResponse) = try Request.Response.intercept(parsedData: parsedData, urlResponse: urlResponse)
 
-                    var response = try Request.Response(data: parsed, urlResponse: urlResponse)
+                    var response = try Request.Response(parsedData: parsedData, urlResponse: urlResponse)
                     (response, urlResponse) = try Request.Response.intercept(instance: response, urlResponse: urlResponse)
 
                     result = .success(response)

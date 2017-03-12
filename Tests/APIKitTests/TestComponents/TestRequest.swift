@@ -32,15 +32,15 @@ struct TestRequest: Request {
 }
 
 struct TestResponse: Response {
-    typealias Parser = JSONDataParser
-
-    static var parser: JSONDataParser {
+    typealias DataParser = JSONDataParser
+    
+    static var dataParser: JSONDataParser {
         return JSONDataParser(readingOptions: [])
     }
 
     let json: Any
 
-    init(data: Parser.Parsed, urlResponse: HTTPURLResponse) throws {
-        json = data
+    init(parsedData: JSONDataParser.Parsed, urlResponse: HTTPURLResponse) throws {
+        json = parsedData
     }
 }
