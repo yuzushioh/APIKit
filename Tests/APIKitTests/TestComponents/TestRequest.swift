@@ -1,14 +1,14 @@
 import Foundation
 import APIKit
 
-struct TestRequest: JSONRequest {
+struct TestRequest: Request {
     var absoluteURL: URL? {
         let urlRequest = try? buildURLRequest()
         return urlRequest?.url
     }
 
     // MARK: Request
-    typealias Response = Any
+    typealias Response = TestResponse
 
     init(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
         self.baseURL = URL(string: baseURL)!
@@ -29,8 +29,18 @@ struct TestRequest: JSONRequest {
     func intercept(urlRequest: URLRequest) throws -> URLRequest {
         return try interceptURLRequest(urlRequest)
     }
+}
 
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-        return object
+struct TestResponse: Response {
+    typealias Parser = JSONDataParser
+
+    static var parser: JSONDataParser {
+        return JSONDataParser(readingOptions: [])
+    }
+
+    let json: Any
+
+    init(data: Parser.Parsed, urlResponse: HTTPURLResponse) throws {
+        json = data
     }
 }

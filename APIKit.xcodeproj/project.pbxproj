@@ -52,6 +52,7 @@
 		7F7048F11D9D8A12003C99F6 /* SessionTaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048EE1D9D8A12003C99F6 /* SessionTaskError.swift */; };
 		7F7048F31D9D8A1F003C99F6 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */; };
 		7FA1690D1D9D8C80006C982B /* HTTPStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1690C1D9D8C80006C982B /* HTTPStub.swift */; };
+		7FD4DCB11E75196A005C55E8 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD4DCB01E75196A005C55E8 /* Response.swift */; };
 		ECA831481DE4DDBF004EB1B5 /* ProtobufDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */; };
 		ECA8314A1DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA831491DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift */; };
 		ECA8314C1DE4E677004EB1B5 /* ProtobufBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA8314B1DE4E677004EB1B5 /* ProtobufBodyParameters.swift */; };
@@ -135,6 +136,7 @@
 		7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncodedSerialization.swift; path = Sources/APIKit/Serializations/URLEncodedSerialization.swift; sourceTree = SOURCE_ROOT; };
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; };
 		7FA1690C1D9D8C80006C982B /* HTTPStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStub.swift; sourceTree = "<group>"; };
+		7FD4DCB01E75196A005C55E8 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtobufDataParser.swift; path = Sources/APIKit/DataParser/ProtobufDataParser.swift; sourceTree = SOURCE_ROOT; };
 		ECA831491DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtobufDataParserTests.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				7F7048C71D9D89BE003C99F6 /* CallbackQueue.swift */,
 				7F7048C81D9D89BE003C99F6 /* HTTPMethod.swift */,
 				7F7048CA1D9D89BE003C99F6 /* Request.swift */,
+				7FD4DCB01E75196A005C55E8 /* Response.swift */,
 				7F7048CB1D9D89BE003C99F6 /* Session.swift */,
 				7F7048CC1D9D89BE003C99F6 /* Unavailable.swift */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapter */,
@@ -487,6 +490,7 @@
 				7F7048E81D9D8A08003C99F6 /* DataParser.swift in Sources */,
 				7F7048CE1D9D89BE003C99F6 /* CallbackQueue.swift in Sources */,
 				7F7048DE1D9D89FB003C99F6 /* AbstractInputStream.m in Sources */,
+				7FD4DCB11E75196A005C55E8 /* Response.swift in Sources */,
 				7F7048E31D9D89FB003C99F6 /* MultipartFormDataBodyParameters.swift in Sources */,
 				7F7048F01D9D8A12003C99F6 /* ResponseError.swift in Sources */,
 				7F7048EA1D9D8A08003C99F6 /* JSONDataParser.swift in Sources */,

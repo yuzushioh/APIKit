@@ -23,8 +23,8 @@ class SessionTests: XCTestCase {
         
         session.send(request) { response in
             switch response {
-            case .success(let dictionary):
-                XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
+            case .success(let response):
+                XCTAssertEqual((response.json as? [String: String])?["key"], "value")
 
             case .failure:
                 XCTFail()
@@ -175,8 +175,8 @@ class SessionTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
-    struct AnotherTestRequest: JSONRequest {
-        typealias Response = Void
+    struct AnotherTestRequest: Request {
+        typealias Response = TestResponse
 
         var baseURL: URL {
             return URL(string: "https://example.com")!
@@ -188,10 +188,6 @@ class SessionTests: XCTestCase {
 
         var path: String {
             return "/"
-        }
-
-        func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-            return ()
         }
     }
 

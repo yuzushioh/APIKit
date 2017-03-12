@@ -26,8 +26,8 @@ class URLSessionAdapterTests: XCTestCase {
 
         session.send(request) { response in
             switch response {
-            case .success(let dictionary):
-                XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
+            case .success(let response):
+                XCTAssertEqual((response.json as? [String: String])?["key"], "value")
 
             case .failure:
                 XCTFail()
