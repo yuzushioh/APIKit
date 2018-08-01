@@ -1,4 +1,4 @@
-import Foundation
+import Foundation
 
 /// `ProtobufDataParser` response Data data.
 public class ProtobufDataParser: DataParser {

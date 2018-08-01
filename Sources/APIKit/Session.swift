@@ -57,7 +57,7 @@ open class Session {
     @discardableResult
     open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
-
+        print(request.headerFields, request.dataParser.contentType)
         let urlRequest: URLRequest
         do {
             urlRequest = try request.buildURLRequest()
@@ -67,6 +67,8 @@ open class Session {
             }
             return nil
         }
+        
+        print(urlRequest.allHTTPHeaderFields)
 
         let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
             let result: Result<Request.Response, SessionTaskError>
