@@ -87,7 +87,7 @@ public extension Request {
     }
 
     public var dataParser: DataParser {
-        return JSONDataParser(readingOptions: [])
+        return ProtobufDataParser()
     }
 
     public func intercept(urlRequest: URLRequest) throws -> URLRequest {
